@@ -2,18 +2,18 @@
 :root {
   --prim: #f0f0f0;
   --sec: #e0e0e0;
-  --tert: #d0d0d0;
+  --tert: #d0d0d0
   
-  --bg: #000000;
-  --bgol: #000000d8;
-  --acc: #ffffff;
+  --bg: #000000
+  --bgol: #000000d8
+  --acc: #ffffff
 
 
   
-  --red: #ff3333;
-  --hov: #b0b0b0;
-  --shdw: #0000001b4;
-  --cmd: #f0f0f0;
+  --red: #ff3333
+  --hov: #b0b0b0
+  --shdw: #0000001b4
+  --cmd: #f0f0f0
   --err: #ff6666;
   --white: #ffffff;
   
@@ -21,7 +21,7 @@
   --a0: clamp(1.125rem, 1.0815rem + 0.2174vw, 1.25rem); 
   
   --a2: clamp(1.62rem, 1.5041rem + 0.5793vw, 1.9531rem);
- // lemme have my snacks
+ /* lemme have my snacks*/
   --ascii: clamp(1.125rem, 0.916rem + 1.4435vw, 3.0518rem);
 }
 
@@ -91,7 +91,7 @@ hr {
   color: var(--tert);
 }
 
-/* Specific hover colors */
+/*some colors baby */
 .github-icon:hover {
   color: var(--acc);
 }
@@ -247,3 +247,5 @@ pre {
 #contentscroll::-webkit-scrollbar {
   display: none;
 }
+/* time to check
+*/
