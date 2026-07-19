@@ -1,15 +1,14 @@
-var github = "https://github.com";
-var email = "mailto:subh@example.com";
+const github = "https://github.com";
+const email = "mailto:subh@example.com";
 
-let banner = [
+const banner = [
   `<div id="banner-section" class="banner">
 yo! type <span class="command">help</span> for a list of supported commands.
   </div>`,
 ];
 
-let aboutme = [
+const aboutme = [
   "<br>",
-  `<div id="aboutme-section">`,
   `<span class='underline'>Hey, I'm Subh</span>`,
   "<br>",
   `<li>Developer and tech enthusiast passionate about building cool stuff.</li>`,
@@ -17,11 +16,10 @@ let aboutme = [
   `<li>Experienced in web development and software engineering.</li>`,
   `<li>Looking to collaborate on interesting projects.</li>`,
   `<li>Contact: <a href="mailto:subh@example.com">subh@example.com</a></li>`,
-  "</div>",
   "<br>",
 ];
 
-let help = [
+const help = [
   `<br><div id="help-section"><pre class="whitespace-pre-wrap">
 <span class="command">aboutme</span>
 ↳ Displays who I am

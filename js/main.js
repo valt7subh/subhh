@@ -1,21 +1,13 @@
-const before = document.getElementById("before");
-const liner = document.getElementById("liner");
-const command = document.getElementById("typer");
-const textarea = document.getElementById("texter");
-const terminal = document.getElementById("terminal");
-const contentscroll = document.getElementById("contentscroll");
+let b4 = document.getElementById("before");
+const cmd = document.getElementById("typer");
+const ta = document.getElementById("texter");
+const tm = document.getElementById("terminal");
+const cs = document.getElementById("contentscroll");
 
-let git = 0;
-let pw = false;
-const commands = [];
+let idx = 0;
+const cmds = [];
 
-function scrollToBottom() {
-  if (contentscroll) {
-    contentscroll.scrollTop = contentscroll.scrollHeight;
-  }
-}
-
-const commandMap = {
+const cmdMap = {
   help: "help",
   aboutme: "aboutme",
   email: "email",
@@ -25,93 +17,67 @@ const commandMap = {
   exit: "exit",
 };
 
-setTimeout(function () {
+const scroll = () => {
+  if (cs) cs.scrollTop = cs.scrollHeight;
+};
+
+setTimeout(() => {
   loopLines(banner, "", 80);
-  textarea.focus();
-  scrollToBottom();
+  ta.focus();
+  scroll();
 }, 100);
 
-window.addEventListener("keyup", function (e) {
+const focus = () => {
+  ta.focus();
+  scroll();
+};
+
+window.addEventListener("keyup", (e) => {
   enterKey(e);
-  scrollToBottom();
+  scroll();
 });
 
-window.addEventListener("keydown", function () {
-  textarea.focus();
-  scrollToBottom();
+window.addEventListener("keydown", focus);
+document.addEventListener("click", focus);
+tm.addEventListener("click", focus);
+ta.addEventListener("input", scroll);
+
+ta.value = "";
+cmd.innerHTML = ta.value;
+
+ta.addEventListener("input", () => {
+  cmd.innerHTML = ta.value;
 });
-
-document.addEventListener("click", function () {
-  textarea.focus();
-  scrollToBottom();
-});
-
-terminal.addEventListener("click", function () {
-  textarea.focus();
-  scrollToBottom();
-});
-
-textarea.addEventListener("input", scrollToBottom);
-
-textarea.value = "";
-command.innerHTML = textarea.value;
 
 function enterKey(e) {
-  textarea.focus();
-  scrollToBottom();
-
-  if (e.keyCode === 181) {
-    document.location.reload(true);
-  }
-
-
-
-  if (e.ctrlKey && e.key === "r") {
-    e.preventDefault();
-    const search = prompt("Reverse search:");
-    const match = commands
-      .slice()
-      .reverse()
-      .find((cmd) => cmd.includes(search));
-    if (match) {
-      textarea.value = match;
-      command.innerHTML = match;
-    } else {
-      addLine("No match found in history.", "error", 100);
-    }
-    scrollToBottom();
-  }
-
   if (e.keyCode === 13) {
-    const input = command.innerHTML.trim().toLowerCase();
-    addLine("[subh@terminal]~$" + command.innerHTML, "no-animation", 0);
-
-    commands.push(command.innerHTML);
-    git = commands.length;
-    commander(input);
-
-    command.innerHTML = "";
-    textarea.value = "";
-    scrollToBottom();
+    const inp = cmd.innerHTML.trim().toLowerCase();
+    addLine("[subh@terminal]~$" + cmd.innerHTML, "no-animation", 0);
+    cmds.push(cmd.innerHTML);
+    idx = cmds.length;
+    commander(inp);
+    cmd.innerHTML = "";
+    ta.value = "";
+    scroll();
   }
 
-  if (e.keyCode === 38 && git !== 0) {
-    git -= 1;
-    textarea.value = commands[git];
-    command.innerHTML = textarea.value;
-    scrollToBottom();
+  if (e.keyCode === 38 && idx !== 0) {
+    idx -= 1;
+    ta.value = cmds[idx];
+    cmd.innerHTML = ta.value;
+    scroll();
   }
 
-  if (e.keyCode === 40 && git !== commands.length) {
-    git += 1;
-    textarea.value = commands[git] || "";
-    command.innerHTML = textarea.value;
-    scrollToBottom();
+  if (e.keyCode === 40 && idx !== cmds.length) {
+    idx += 1;
+    ta.value = cmds[idx] || "";
+    cmd.innerHTML = ta.value;
+    scroll();
   }
 }
 
-function commander(cmd) {
-  switch (cmd.toLowerCase()) {
+function commander(c) {
+  switch (c) {
     case "help":
       loopLines(help, "color2 margin", 80);
       break;
@@ -127,20 +93,17 @@ function commander(cmd) {
       newTab(email);
       break;
     case "clear":
-      setTimeout(function () {
-        const paragraphs = terminal.querySelectorAll("p");
-        paragraphs.forEach((p) => p.remove());
+      setTimeout(() => {
+        tm.querySelectorAll("p").forEach((p) => p.remove());
         if (!document.getElementById("before")) {
-          const beforeElement = document.createElement("a");
-          beforeElement.id = "before";
-          terminal.insertBefore(beforeElement, terminal.firstChild);
-          before = beforeElement;
+          const el = document.createElement("a");
+          el.id = "before";
+          tm.insertBefore(el, tm.firstChild);
+          b4 = el;
         }
-        if (typeof banner !== "undefined") {
-          loopLines(banner, "", 80);
-        }
-        textarea.focus();
-        scrollToBottom();
+        if (banner) loopLines(banner, "", 80);
+        ta.focus();
+        scroll();
       }, 1);
       break;
     case "github":
@@ -150,180 +113,107 @@ function commander(cmd) {
     case "capitalist-snake":
       runSnakeGame();
       break;
+    case "quit":
+    case "logout":
+    case "exit":
+      addLine("Session terminated.", "color2", 0);
+      setTimeout(() => {
+        window.open("", "_self");
+        window.close();
+      }, 500);
+      break;
     default:
       addLine(
         `<span class="inherit">Command not found. Type <span class="command">'help'</span> for available commands.</span>`,
         "error",
         100,
       );
-      break;
-
-    case "quit":
-    case "logout":
-    case "exit":
-      addLine("Session terminated.", "color2", 0);
-      setTimeout(close_window, 500);
-      break;
   }
-  scrollToBottom();
+  scroll();
 }
 
-function close_window() {
-  // Attempt normal close (works if tab was JS-opened)
-  window.open("", "_self");
-  window.close();
+const newTab = (link) => {
+  setTimeout(() => window.open(link, "_blank"), 500);
+};
 
-  // Fallback (most browsers): navigate away
+const addLine = (txt, s, t) => {
+  let out = txt.replace(/ {2}/g, "&nbsp;&nbsp;");
   setTimeout(() => {
-    window.location.href = "about:blank";
-  }, 100);
-}
+    const p = document.createElement("p");
+    p.innerHTML = out;
+    p.className = s;
+    b4.parentNode.insertBefore(p, b4);
+    cs.scrollTop = cs.scrollHeight;
+  }, t);
+};
 
-function newTab(link) {
-  setTimeout(function () {
-    window.open(link, "_blank");
-  }, 500);
-}
+const loopLines = (ln, s, t) => {
+  ln.forEach((item, i) => addLine(item, s, i * t));
+  setTimeout(() => scroll(), ln.length * t + 50);
+};
 
-function addLine(text, style, time) {
-  let t = "";
-  for (let i = 0; i < text.length; i++) {
-    if (text.charAt(i) === " " && text.charAt(i + 1) === " ") {
-      t += "&nbsp;&nbsp;";
-      i++;
-    } else {
-      t += text.charAt(i);
-    }
-  }
+const runSnakeGame = () => {
+  const w = 20, h = 10;
+  let s = [{ x: 5, y: 5 }], f = { x: 10, y: 5 }, d = "right", sc = 0, iv, ge;
 
-  setTimeout(function () {
-    const next = document.createElement("p");
-    next.innerHTML = t;
-    next.className = style;
-    before.parentNode.insertBefore(next, before);
-    contentscroll.scrollTop = contentscroll.scrollHeight;
-  }, time);
-}
-
-function loopLines(name, style, time) {
-  name.forEach(function (item, index) {
-    addLine(item, style, index * time);
-  });
-  setTimeout(
-    function () {
-      scrollToBottom();
-    },
-    name.length * time + 50,
-  );
-}
-
-function runSnakeGame() {
-  const width = 20,
-    height = 10;
-  let snake = [{ x: 5, y: 5 }];
-  let food = { x: 10, y: 5 };
-  let dir = "right";
-  let score = 0;
-  let interval;
-  let gameElement;
-
-  function draw() {
-    let screen = `Score: ${score}\n`;
-    for (let y = 0; y < height; y++) {
-      let row = "";
-      for (let x = 0; x < width; x++) {
-        if (x === food.x && y === food.y) row += "$";
-        else if (snake.some((s) => s.x === x && s.y === y)) row += "O";
-        else row += ".";
+  const draw = () => {
+    let scrn = `Score: ${sc}\n`;
+    for (let y = 0; y < h; y++) {
+      let r = "";
+      for (let x = 0; x < w; x++) {
+        if (x === f.x && y === f.y) r += "$";
+        else if (s.some((p) => p.x === x && p.y === y)) r += "O";
+        else r += ".";
       }
-      screen += row + "\n";
+      scrn += r + "\n";
     }
-
-    if (!gameElement) {
-      gameElement = document.createElement("p");
-      gameElement.className = "color2";
-      gameElement.innerHTML = `<pre>${screen}</pre>`;
-      before.parentNode.insertBefore(gameElement, before);
-    } else {
-      gameElement.innerHTML = `<pre>${screen}</pre>`;
+    if (!ge) {
+      ge = document.createElement("p");
+      ge.className = "color2";
+      b4.parentNode.insertBefore(ge, b4);
     }
+    ge.innerHTML = `<pre>${scrn}</pre>`;
+    cs.scrollTop = cs.scrollHeight;
+  };
 
-    contentscroll.scrollTop = contentscroll.scrollHeight;
-  }
+  const move = () => {
+    const h = { ...s[0] };
+    if (d === "up") h.y--;
+    else if (d === "down") h.y++;
+    else if (d === "left") h.x--;
+    else if (d === "right") h.x++;
 
-  function move() {
-    const head = { ...snake[0] };
-    switch (dir) {
-      case "up":
-        head.y--;
-        break;
-      case "down":
-        head.y++;
-        break;
-      case "left":
-        head.x--;
-        break;
-      case "right":
-        head.x++;
-        break;
-    }
-
-    if (
-      head.x < 0 ||
-      head.x >= width ||
-      head.y < 0 ||
-      head.y >= height ||
-      snake.some((s) => s.x === head.x && s.y === head.y)
-    ) {
-      clearInterval(interval);
-      gameElement.innerHTML += `<br><span class="error">Game Over! Final Score: ${score}</span>`;
-      window.removeEventListener("keydown", keyHandler);
+    if (h.x < 0 || h.x >= w || h.y < 0 || h.y >= h || s.some((p) => p.x === h.x && p.y === h.y)) {
+      clearInterval(iv);
+      ge.innerHTML += `<br><span class="error">Game Over! Final Score: ${sc}</span>`;
+      window.removeEventListener("keydown", kh);
       return;
     }
 
-    snake.unshift(head);
-    if (head.x === food.x && head.y === food.y) {
-      score++;
-      food = {
-        x: Math.floor(Math.random() * width),
-        y: Math.floor(Math.random() * height),
-      };
+    s.unshift(h);
+    if (h.x === f.x && h.y === f.y) {
+      sc++;
+      f = { x: Math.floor(Math.random() * w), y: Math.floor(Math.random() * h) };
     } else {
-      snake.pop();
+      s.pop();
     }
-
     draw();
-  }
+  };
 
-  function keyHandler(e) {
-    switch (e.key) {
-      case "ArrowUp":
-        if (dir !== "down") dir = "up";
-        break;
-      case "ArrowDown":
-        if (dir !== "up") dir = "down";
-        break;
-      case "ArrowLeft":
-        if (dir !== "right") dir = "left";
-        break;
-      case "ArrowRight":
-        if (dir !== "left") dir = "right";
-        break;
-      case "Escape":
-      case "q":
-        clearInterval(interval);
-        window.removeEventListener("keydown", keyHandler);
-        gameElement.innerHTML += `<br><span class="color2">Game exited.</span>`;
-        break;
+  const kh = (e) => {
+    if (e.key === "ArrowUp" && d !== "down") d = "up";
+    else if (e.key === "ArrowDown" && d !== "up") d = "down";
+    else if (e.key === "ArrowLeft" && d !== "right") d = "left";
+    else if (e.key === "ArrowRight" && d !== "left") d = "right";
+    else if (e.key === "Escape" || e.key === "q") {
+      clearInterval(iv);
+      window.removeEventListener("keydown", kh);
+      ge.innerHTML += `<br><span class="color2">Game exited.</span>`;
     }
-  }
+  };
 
-  window.addEventListener("keydown", keyHandler);
-  addLine(
-    "Starting Capitalist Snake. Use arrow keys to move. 'q' or Esc to quit.",
-    "color2",
-    0,
-  );
+  window.addEventListener("keydown", kh);
+  addLine("Starting Capitalist Snake. Use arrow keys to move. 'q' or Esc to quit.", "color2", 0);
   draw();
-  interval = setInterval(move, 250);
-}
+  iv = setInterval(move, 250);
+};
