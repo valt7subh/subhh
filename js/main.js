@@ -20,10 +20,8 @@ function scrollToBottom() {
 const commandMap = {
   help: "help",
   aboutme: "aboutme",
-  projects: "projects",
   email: "email",
-  history: "history",
-  snake: "snake",
+  "capitalist-snake": "capitalist-snake",
   clear: "clear",
   github: "github",
   exit: "exit",
@@ -148,14 +146,6 @@ function commander(cmd) {
     case "aboutme":
       loopLines(aboutme, "color2 margin", 80);
       break;
-    case "projects":
-      loopLines(projects, "color2 margin", 80);
-      break;
-    case "history":
-      addLine("<br>", "", 0);
-      loopLines(commands, "color2", 80);
-      addLine("<br>", "command", 80 * commands.length + 50);
-      break;
     case "email":
       addLine(
         'Opening mailto:<a href="mailto:subh@example.com"> subh@example.com</a>...',
@@ -185,7 +175,7 @@ function commander(cmd) {
       addLine("Opening GitHub...", "color2", 0);
       newTab(github);
       break;
-    case "snake":
+    case "capitalist-snake":
       runSnakeGame();
       break;
     default:
@@ -210,7 +200,7 @@ function commander(cmd) {
     case "quit":
     case "logout":
     case "exit":
-      addLine("👋 Session terminated.", "color2", 0);
+      addLine("Session terminated.", "color2", 0);
       setTimeout(close_window, 500);
       break;
   }
@@ -314,7 +304,7 @@ function runSnakeGame() {
     for (let y = 0; y < height; y++) {
       let row = "";
       for (let x = 0; x < width; x++) {
-        if (x === food.x && y === food.y) row += "*";
+        if (x === food.x && y === food.y) row += "$";
         else if (snake.some((s) => s.x === x && s.y === y)) row += "O";
         else row += ".";
       }
@@ -358,7 +348,7 @@ function runSnakeGame() {
       snake.some((s) => s.x === head.x && s.y === head.y)
     ) {
       clearInterval(interval);
-      gameElement.innerHTML += `<br><span class="error">💀 Game Over! Final Score: ${score}</span>`;
+      gameElement.innerHTML += `<br><span class="error">Game Over! Final Score: ${score}</span>`;
       window.removeEventListener("keydown", keyHandler);
       return;
     }
@@ -395,14 +385,14 @@ function runSnakeGame() {
       case "q":
         clearInterval(interval);
         window.removeEventListener("keydown", keyHandler);
-        gameElement.innerHTML += `<br><span class="color2">🛑 Snake game exited.</span>`;
+        gameElement.innerHTML += `<br><span class="color2">Game exited.</span>`;
         break;
     }
   }
 
   window.addEventListener("keydown", keyHandler);
   addLine(
-    "🎮 Starting Snake game... Use arrow keys to move. 'q' or Esc to quit.",
+    "Starting Capitalist Snake. Use arrow keys to move. 'q' or Esc to quit.",
     "color2",
     0,
   );
