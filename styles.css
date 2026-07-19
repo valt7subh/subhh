@@ -1,10 +1,6 @@
 
 
-/* @link https://utopia.fyi/type/calculator?c=320,18,1.2,1240,20,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
-
 :root {
-  /* Theme variables */
-  /* Default theme (Black Terminal with White Text) */
   --color-primary: #f0f0f0;
   --color-secondary: #e0e0e0;
   --color-tertiary: #d0d0d0;
@@ -18,8 +14,6 @@
   --color-error: #ff6666;
   --color-white: #fff;
   --background-image: none;
-
-  /* Typography */
   --step--2: clamp(0.7813rem, 0.7747rem + 0.0326vw, 0.8rem);
   --step--1: clamp(0.9375rem, 0.9158rem + 0.1087vw, 1rem);
   --step-0: clamp(1.125rem, 1.0815rem + 0.2174vw, 1.25rem);
@@ -102,10 +96,6 @@ hr {
   color: var(--color-accent);
 }
 
-.close-icon:hover {
-  color: var(--color-danger);
-}
-
 .ascii {
   font-family: monospace; /* Makes sure characters align */
   white-space: pre; /* Preserve formatting */
@@ -117,44 +107,6 @@ hr {
   display: inline-block;
   overflow-wrap: break-word;
   line-height: 1;
-}
-
-.name {
-  position: relative;
-  display: inline-block;
-  font-weight: bold;
-  color: var(--color-primary);
-}
-
-.name::after {
-  content: "------------------------------";
-  display: block;
-  margin-top: 0.5rem;
-  width: 100%;
-}
-
-.info-item {
-  display: flex;
-  align-items: center;
-  color: var(--color-primary);
-  margin-bottom: 0.5rem;
-}
-
-.info-item i {
-  margin-right: 0.6rem;
-  min-width: 1.25rem;
-  text-align: center;
-}
-
-.link-text {
-  padding-left: 0.5rem;
-  color: var(--color-primary);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.link-text:hover {
-  color: var(--color-accent);
 }
 
 #contentscroll {
@@ -176,27 +128,6 @@ hr {
   flex-shrink: 0;
 }
 
-.profile-info {
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
-  text-align: left;
-  font-size: var(--step--1);
-  padding: var(--step-2);
-}
-
-/* Responsive: stack on smaller screens */
-@media (max-width: 1015px) {
-  .content-container {
-    flex-direction: column;
-    gap: 0rem;
-  }
-  .profile-info {
-    padding-top: var(--step--2);
-  }
-}
-
-/* Terminal input */
 #terminal {
   min-height: 100px;
   padding-left: var(--step-0);
@@ -253,7 +184,6 @@ hr {
   animation: blinker 1s linear infinite;
 }
 
-/* Animations */
 @keyframes show {
   from {
     opacity: 0;
@@ -269,7 +199,6 @@ hr {
   }
 }
 
-/* Colors */
 .index {
   color: #dcdccc;
 }
@@ -304,18 +233,17 @@ hr {
   pointer-events: none;
 }
 
+a {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
 pre {
   white-space: pre-wrap !important;
   word-break: break-word;
   overflow-wrap: break-word;
 }
 
-a {
-  word-break: break-word;
-  overflow-wrap: break-word;
-}
-
-/* Hide scrollbar in content scroll */
 #contentscroll::-webkit-scrollbar {
   display: none;
 }
