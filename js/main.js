@@ -8,8 +8,6 @@ const contentscroll = document.getElementById("contentscroll");
 let git = 0;
 let pw = false;
 const commands = [];
-let suggestedCommand = null;
-let awaitingConfirmation = false;
 
 function scrollToBottom() {
   if (contentscroll) {
@@ -66,23 +64,7 @@ function enterKey(e) {
     document.location.reload(true);
   }
 
-  if (e.key === "Tab") {
-    e.preventDefault();
-    const partial = textarea.value.toLowerCase();
-    const matches = Object.keys(commandMap).filter((cmd) =>
-      cmd.startsWith(partial),
-    );
-    if (matches.length === 1) {
-      textarea.value = matches[0];
-      command.innerHTML = matches[0];
-    } else if (matches.length > 1) {
-      addLine("<br>", "", 0);
-      loopLines(matches, "color2", 80);
-      addLine("<br>", "", matches.length * 80 + 100);
-    }
-    scrollToBottom();
-    return;
-  }
+
 
   if (e.ctrlKey && e.key === "r") {
     e.preventDefault();
@@ -104,19 +86,9 @@ function enterKey(e) {
     const input = command.innerHTML.trim().toLowerCase();
     addLine("[subh@terminal]~$" + command.innerHTML, "no-animation", 0);
 
-    if (awaitingConfirmation && suggestedCommand) {
-      if (input === "y") {
-        commander(suggestedCommand);
-      } else {
-        addLine("Cancelled.", "color2", 80);
-      }
-      awaitingConfirmation = false;
-      suggestedCommand = null;
-    } else {
-      commands.push(command.innerHTML);
-      git = commands.length;
-      commander(input);
-    }
+    commands.push(command.innerHTML);
+    git = commands.length;
+    commander(input);
 
     command.innerHTML = "";
     textarea.value = "";
@@ -179,22 +151,11 @@ function commander(cmd) {
       runSnakeGame();
       break;
     default:
-      const closest = findClosestCommand(cmd);
-      if (closest) {
-        suggestedCommand = closest;
-        awaitingConfirmation = true;
-        addLine(
-          `<span class="inherit">Command not found. Did you mean <span class="command">'${closest}'</span>? (y/n)</span>`,
-          "error",
-          100,
-        );
-      } else {
-        addLine(
-          `<span class="inherit">Command not found. Type <span class="command">'help'</span> for available commands.</span>`,
-          "error",
-          100,
-        );
-      }
+      addLine(
+        `<span class="inherit">Command not found. Type <span class="command">'help'</span> for available commands.</span>`,
+        "error",
+        100,
+      );
       break;
 
     case "quit":
@@ -254,39 +215,6 @@ function loopLines(name, style, time) {
     },
     name.length * time + 50,
   );
-}
-
-function findClosestCommand(input) {
-  const threshold = 3;
-  let minDist = Infinity;
-  let closest = null;
-  Object.keys(commandMap).forEach((cmd) => {
-    const dist = levenshtein(input, cmd);
-    if (dist < minDist && dist <= threshold) {
-      minDist = dist;
-      closest = cmd;
-    }
-  });
-  return closest;
-}
-
-function levenshtein(a, b) {
-  const matrix = Array.from({ length: a.length + 1 }, () =>
-    Array(b.length + 1).fill(0),
-  );
-  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
-  for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
-  for (let i = 1; i <= a.length; i++) {
-    for (let j = 1; j <= b.length; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      matrix[i][j] = Math.min(
-        matrix[i - 1][j] + 1,
-        matrix[i][j - 1] + 1,
-        matrix[i - 1][j - 1] + cost,
-      );
-    }
-  }
-  return matrix[a.length][b.length];
 }
 
 function runSnakeGame() {

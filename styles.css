@@ -1,9 +1,4 @@
-@font-face {
-  font-family: "FantasqueSansMono";
-  src: url("assets/fonts/fantasquesansmonoregular.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
+
 
 /* @link https://utopia.fyi/type/calculator?c=320,18,1.2,1240,20,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
 
@@ -54,7 +49,7 @@ body {
   -webkit-text-size-adjust: auto;
   text-size-adjust: auto;
   overflow: hidden;
-  font-family: "FantasqueSansMono";
+  font-family: "Courier New", Courier, monospace;
   margin: 0;
   padding: 0;
 }
@@ -83,7 +78,7 @@ header {
   padding: 10px 10px 0 10px;
   position: relative;
   font-size: var(--step-0);
-  font-family: "FantasqueSansMono";
+  font-family: "Courier New", Courier, monospace;
 }
 
 hr {
