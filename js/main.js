@@ -8,8 +8,6 @@ const contentscroll = document.getElementById("contentscroll");
 let git = 0;
 let pw = false;
 const commands = [];
-let suggestedCommand = null;
-let awaitingConfirmation = false;
 
 function scrollToBottom() {
   if (contentscroll) {
@@ -20,10 +18,8 @@ function scrollToBottom() {
 const commandMap = {
   help: "help",
   aboutme: "aboutme",
-  projects: "projects",
   email: "email",
-  history: "history",
-  snake: "snake",
+  "capitalist-snake": "capitalist-snake",
   clear: "clear",
   github: "github",
   exit: "exit",
@@ -68,23 +64,7 @@ function enterKey(e) {
     document.location.reload(true);
   }
 
-  if (e.key === "Tab") {
-    e.preventDefault();
-    const partial = textarea.value.toLowerCase();
-    const matches = Object.keys(commandMap).filter((cmd) =>
-      cmd.startsWith(partial),
-    );
-    if (matches.length === 1) {
-      textarea.value = matches[0];
-      command.innerHTML = matches[0];
-    } else if (matches.length > 1) {
-      addLine("<br>", "", 0);
-      loopLines(matches, "color2", 80);
-      addLine("<br>", "", matches.length * 80 + 100);
-    }
-    scrollToBottom();
-    return;
-  }
+
 
   if (e.ctrlKey && e.key === "r") {
     e.preventDefault();
@@ -106,19 +86,9 @@ function enterKey(e) {
     const input = command.innerHTML.trim().toLowerCase();
     addLine("[subh@terminal]~$" + command.innerHTML, "no-animation", 0);
 
-    if (awaitingConfirmation && suggestedCommand) {
-      if (input === "y") {
-        commander(suggestedCommand);
-      } else {
-        addLine("Cancelled.", "color2", 80);
-      }
-      awaitingConfirmation = false;
-      suggestedCommand = null;
-    } else {
-      commands.push(command.innerHTML);
-      git = commands.length;
-      commander(input);
-    }
+    commands.push(command.innerHTML);
+    git = commands.length;
+    commander(input);
 
     command.innerHTML = "";
     textarea.value = "";
@@ -147,14 +117,6 @@ function commander(cmd) {
       break;
     case "aboutme":
       loopLines(aboutme, "color2 margin", 80);
-      break;
-    case "projects":
-      loopLines(projects, "color2 margin", 80);
-      break;
-    case "history":
-      addLine("<br>", "", 0);
-      loopLines(commands, "color2", 80);
-      addLine("<br>", "command", 80 * commands.length + 50);
       break;
     case "email":
       addLine(
@@ -185,32 +147,21 @@ function commander(cmd) {
       addLine("Opening GitHub...", "color2", 0);
       newTab(github);
       break;
-    case "snake":
+    case "capitalist-snake":
       runSnakeGame();
       break;
     default:
-      const closest = findClosestCommand(cmd);
-      if (closest) {
-        suggestedCommand = closest;
-        awaitingConfirmation = true;
-        addLine(
-          `<span class="inherit">Command not found. Did you mean <span class="command">'${closest}'</span>? (y/n)</span>`,
-          "error",
-          100,
-        );
-      } else {
-        addLine(
-          `<span class="inherit">Command not found. Type <span class="command">'help'</span> for available commands.</span>`,
-          "error",
-          100,
-        );
-      }
+      addLine(
+        `<span class="inherit">Command not found. Type <span class="command">'help'</span> for available commands.</span>`,
+        "error",
+        100,
+      );
       break;
 
     case "quit":
     case "logout":
     case "exit":
-      addLine("👋 Session terminated.", "color2", 0);
+      addLine("Session terminated.", "color2", 0);
       setTimeout(close_window, 500);
       break;
   }
@@ -266,39 +217,6 @@ function loopLines(name, style, time) {
   );
 }
 
-function findClosestCommand(input) {
-  const threshold = 3;
-  let minDist = Infinity;
-  let closest = null;
-  Object.keys(commandMap).forEach((cmd) => {
-    const dist = levenshtein(input, cmd);
-    if (dist < minDist && dist <= threshold) {
-      minDist = dist;
-      closest = cmd;
-    }
-  });
-  return closest;
-}
-
-function levenshtein(a, b) {
-  const matrix = Array.from({ length: a.length + 1 }, () =>
-    Array(b.length + 1).fill(0),
-  );
-  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
-  for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
-  for (let i = 1; i <= a.length; i++) {
-    for (let j = 1; j <= b.length; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      matrix[i][j] = Math.min(
-        matrix[i - 1][j] + 1,
-        matrix[i][j - 1] + 1,
-        matrix[i - 1][j - 1] + cost,
-      );
-    }
-  }
-  return matrix[a.length][b.length];
-}
-
 function runSnakeGame() {
   const width = 20,
     height = 10;
@@ -314,7 +232,7 @@ function runSnakeGame() {
     for (let y = 0; y < height; y++) {
       let row = "";
       for (let x = 0; x < width; x++) {
-        if (x === food.x && y === food.y) row += "*";
+        if (x === food.x && y === food.y) row += "$";
         else if (snake.some((s) => s.x === x && s.y === y)) row += "O";
         else row += ".";
       }
@@ -358,7 +276,7 @@ function runSnakeGame() {
       snake.some((s) => s.x === head.x && s.y === head.y)
     ) {
       clearInterval(interval);
-      gameElement.innerHTML += `<br><span class="error">💀 Game Over! Final Score: ${score}</span>`;
+      gameElement.innerHTML += `<br><span class="error">Game Over! Final Score: ${score}</span>`;
       window.removeEventListener("keydown", keyHandler);
       return;
     }
@@ -395,14 +313,14 @@ function runSnakeGame() {
       case "q":
         clearInterval(interval);
         window.removeEventListener("keydown", keyHandler);
-        gameElement.innerHTML += `<br><span class="color2">🛑 Snake game exited.</span>`;
+        gameElement.innerHTML += `<br><span class="color2">Game exited.</span>`;
         break;
     }
   }
 
   window.addEventListener("keydown", keyHandler);
   addLine(
-    "🎮 Starting Snake game... Use arrow keys to move. 'q' or Esc to quit.",
+    "Starting Capitalist Snake. Use arrow keys to move. 'q' or Esc to quit.",
     "color2",
     0,
   );

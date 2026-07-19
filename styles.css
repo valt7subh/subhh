@@ -1,26 +1,21 @@
-@font-face {
-  font-family: "FantasqueSansMono";
-  src: url("assets/fonts/fantasquesansmonoregular.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
+
 
 /* @link https://utopia.fyi/type/calculator?c=320,18,1.2,1240,20,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
 
 :root {
   /* Theme variables */
-  /* Default theme (Black Terminal) */
-  --color-primary: #00ff00;
-  --color-secondary: #00cc00;
-  --color-tertiary: #00aa00;
+  /* Default theme (Black Terminal with White Text) */
+  --color-primary: #f0f0f0;
+  --color-secondary: #e0e0e0;
+  --color-tertiary: #d0d0d0;
   --color-background: #000000;
   --color-background-overlay: #000000d8;
-  --color-accent: #ff00ff;
-  --color-danger: #ff0000;
-  --color-hover: #00ff7fac;
+  --color-accent: #ffffff;
+  --color-danger: #ff3333;
+  --color-hover: #b0b0b0;
   --color-shadow: #0000001b4;
-  --color-command: #00ff00;
-  --color-error: #ff3333d9;
+  --color-command: #f0f0f0;
+  --color-error: #ff6666;
   --color-white: #fff;
   --background-image: none;
 
@@ -54,7 +49,7 @@ body {
   -webkit-text-size-adjust: auto;
   text-size-adjust: auto;
   overflow: hidden;
-  font-family: "FantasqueSansMono";
+  font-family: "Courier New", Courier, monospace;
   margin: 0;
   padding: 0;
 }
@@ -65,8 +60,11 @@ body {
   border-radius: 4px;
   width: 100%;
   height: 100%;
-  min-height: 98vh;
-  max-height: 105vh;
+  min-height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
   box-shadow:
     0 20px 25px -5px var(--color-shadow),
@@ -80,7 +78,7 @@ header {
   padding: 10px 10px 0 10px;
   position: relative;
   font-size: var(--step-0);
-  font-family: "FantasqueSansMono";
+  font-family: "Courier New", Courier, monospace;
 }
 
 hr {
@@ -160,9 +158,11 @@ hr {
 }
 
 #contentscroll {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer and Edge */
-  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .content-container {
@@ -198,14 +198,15 @@ hr {
 
 /* Terminal input */
 #terminal {
-  height: 55vh;
+  min-height: 100px;
   padding-left: var(--step-0);
   font-size: var(--step-0);
+  overflow: visible;
 }
 
 @media (max-width: 726px) {
   #terminal {
-    height: 38vh;
+    min-height: 80px;
   }
 }
 
