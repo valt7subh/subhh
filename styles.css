@@ -97,8 +97,8 @@ hr {
 }
 
 .ascii {
-  font-family: monospace; /* Makes sure characters align */
-  white-space: pre; /* Preserve formatting */
+  font-family: monospace; /* Making sure characters dont go flying */
+  white-space: pre; 
   display: inline-block;
   font-size: var(--ascii);
   padding-left: var(--a2);
