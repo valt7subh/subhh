@@ -78,10 +78,10 @@ function enterKey(e) {
 function commander(c) {
   switch (c) {
     case "help":
-      loopLines(help, "color7 margin", 80);
+      loopLines(help, "color2 margin", 80);
       break;
     case "aboutme":
-      loopLines(aboutme, "color7 margin", 80);
+      loopLines(aboutme, "color2 margin", 80);
       break;
     
       newTab(email);
@@ -107,7 +107,7 @@ function commander(c) {
     case "quit":
     case "logout":
     case "exit":
-      addLine("Session terminated.", "color7", 0);
+      addLine("Session terminated.", "color2", 0);
       setTimeout(() => {
         window.open("", "_self");
         window.close();
@@ -160,7 +160,7 @@ const runSnakeGame = () => {
     }
     if (!ge) {
       ge = document.createElement("p");
-      ge.className = "color7";
+      ge.className = "color2";
       b4.parentNode.insertBefore(ge, b4);
     }
     ge.innerHTML = `<pre>${scrn}</pre>`;
@@ -199,12 +199,12 @@ const runSnakeGame = () => {
     else if (e.key === "Escape" || e.key === "q") {
       clearInterval(iv);
       window.removeEventListener("keydown", kh);
-      ge.innerHTML += `<br><span class="color7">Game exited.</span>`;
+      ge.innerHTML += `<br><span class="color2">Game exited.</span>`;
     }
   };
 
   window.addEventListener("keydown", kh);
-  addLine("Starting Capitalist Snake. Use arrow keys to move. 'q' or Esc to quit.", "color7", 0);
+  addLine("Starting Capitalist Snake. Use arrow keys to move. 'q' or Esc to quit.", "color2", 0);
   draw();
   iv = setInterval(move, 250);
 };
