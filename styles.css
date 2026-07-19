@@ -29,7 +29,7 @@ a {
   color: var(--prim);
 }
 
-a:hover {
+a:hov {
   color: var(--acc);
 }
 
