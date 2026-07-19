@@ -13,7 +13,6 @@ const cmdMap = {
   email: "email",
   "capitalist-snake": "capitalist-snake",
   clear: "clear",
-  github: "github",
   exit: "exit",
 };
 
@@ -79,17 +78,12 @@ function enterKey(e) {
 function commander(c) {
   switch (c) {
     case "help":
-      loopLines(help, "color2 margin", 80);
+      loopLines(help, "color7 margin", 80);
       break;
     case "aboutme":
-      loopLines(aboutme, "color2 margin", 80);
+      loopLines(aboutme, "color7 margin", 80);
       break;
-    case "email":
-      addLine(
-        'Opening mailto:<a href="mailto:subh@example.com"> subh@example.com</a>...',
-        "color2",
-        80,
-      );
+    
       newTab(email);
       break;
     case "clear":
@@ -106,17 +100,14 @@ function commander(c) {
         scroll();
       }, 1);
       break;
-    case "github":
-      addLine("Opening GitHub...", "color2", 0);
-      newTab(github);
-      break;
+   
     case "capitalist-snake":
       runSnakeGame();
       break;
     case "quit":
     case "logout":
     case "exit":
-      addLine("Session terminated.", "color2", 0);
+      addLine("Session terminated.", "color7", 0);
       setTimeout(() => {
         window.open("", "_self");
         window.close();
@@ -169,7 +160,7 @@ const runSnakeGame = () => {
     }
     if (!ge) {
       ge = document.createElement("p");
-      ge.className = "color2";
+      ge.className = "color7";
       b4.parentNode.insertBefore(ge, b4);
     }
     ge.innerHTML = `<pre>${scrn}</pre>`;
@@ -208,12 +199,12 @@ const runSnakeGame = () => {
     else if (e.key === "Escape" || e.key === "q") {
       clearInterval(iv);
       window.removeEventListener("keydown", kh);
-      ge.innerHTML += `<br><span class="color2">Game exited.</span>`;
+      ge.innerHTML += `<br><span class="color7">Game exited.</span>`;
     }
   };
 
   window.addEventListener("keydown", kh);
-  addLine("Starting Capitalist Snake. Use arrow keys to move. 'q' or Esc to quit.", "color2", 0);
+  addLine("Starting Capitalist Snake. Use arrow keys to move. 'q' or Esc to quit.", "color7", 0);
   draw();
   iv = setInterval(move, 250);
 };
