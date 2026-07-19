@@ -3,7 +3,7 @@ var email = "mailto:subh@example.com";
 
 let banner = [
   `<div id="banner-section" class="banner">
-Welcome to my portfolio. Type <span class="command">help</span> for a list of supported commands.
+yo! type <span class="command">help</span> for a list of supported commands.
   </div>`,
 ];
 
